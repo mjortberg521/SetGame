@@ -6,48 +6,44 @@ from PIL import Image
 import math
 import os
 import cv2
+import numpy as np
 
-
-#Sample set
-#[]
 
 """
 Make the set using data from the image
 1. Make a dictionary with image files and their attribute code lists DONE
 2. Identify each card of the 12 by comparing it to all stored files in the program. When a match is found, save the attribute code list of the found image 
 3. Add the attribute code list to the list of cards
-
-https://stackoverflow.com/questions/6059217/cutting-one-image-into-multiple-images-using-the-python-image-library
-
 """
 
 images = {
-'[0,0,0,0].jpg': [0,0,0,0], '[2,1,1,1].jpg': [2,1,1,1], '[0,2,1,0].jpg': [0,2,1,0], '[2,0,0,2].jpg': [2,0,0,2],
-'[1,2,0,1].jpg': [1,2,0,1], '[0,2,2,2].jpg': [0,2,2,2], '[2,0,0,0].jpg': [2,0,0,0], '[1,0,1,2].jpg': [1,0,1,2], 
-'[0,2,0,1].jpg': [0,2,0,1], '[2,0,1,1].jpg': [2,0,1,1], '[1,0,0,2].jpg': [1,0,0,2], '[0,2,2,1].jpg': [0,2,2,1], 
-'[2,0,2,2].jpg': [2,0,2,2], '[2,2,1,2].jpg': [2,2,1,2], '[1,2,2,2].jpg': [1,2,2,2], '[1,0,1,0].jpg': [1,0,1,0], 
-'[2,2,0,2].jpg': [2,2,0,2], '[2,2,2,2].jpg': [2,2,2,2], '[1,0,2,2].jpg': [1,0,2,2], '[0,1,0,1].jpg': [0,1,0,1], 
-'[0,2,0,0].jpg': [0,2,0,0], '[2,1,0,0].jpg': [2,1,0,0], '[2,1,0,2].jpg': [2,1,0,2], '[2,2,2,1].jpg': [2,2,2,1], 
-'[2,0,1,2].jpg': [2,0,1,2], '[1,2,1,2].jpg': [1,2,1,2], '[1,1,1,2].jpg': [1,1,1,2], '[2,1,2,2].jpg': [2,1,2,2], 
-'[1,1,0,1].jpg': [1,1,0,1], '[2,2,2,0].jpg': [2,2,2,0], '[2,1,0,1].jpg': [2,1,0,1], '[2,1,2,0].jpg': [2,1,2,0], 
-'[1,0,1,1].jpg': [1,0,1,1], '[2,2,1,0].jpg': [2,2,1,0], '[0,0,0,2].jpg': [0,0,0,2], '[2,1,2,1].jpg': [2,1,2,1], 
-'[0,1,1,0].jpg': [0,1,1,0], '[0,2,0,2].jpg': [0,2,0,2], '[0,1,2,0].jpg': [0,1,2,0], '[0,0,2,2].jpg': [0,0,2,2], 
-'[0,0,2,0].jpg': [0,0,2,0], '[0,1,0,2].jpg': [0,1,0,2], '[2,1,1,2].jpg': [2,1,1,2], '[2,0,2,1].jpg': [2,0,2,1], 
-'[1,0,2,0].jpg': [1,0,2,0], '[0,0,1,0].jpg': [0,0,1,0], '[1,1,2,1].jpg': [1,1,2,1], '[0,2,2,0].jpg': [0,2,2,0], 
-'[1,0,0,1].jpg': [1,0,0,1], '[1,2,2,1].jpg': [1,2,2,1], '[0,1,1,1].jpg': [0,1,1,1], '[0,1,2,2].jpg': [0,1,2,2], 
-'[1,1,0,2].jpg': [1,1,0,2], '[0,0,1,2].jpg': [0,0,1,2], '[2,1,1,0].jpg': [2,1,1,0], '[1,0,0,0].jpg': [1,0,0,0], 
-'[1,2,0,0].jpg': [1,2,0,0], '[0,1,2,1].jpg': [0,1,2,1], '[1,1,0,0].jpg': [1,1,0,0], '[0,0,1,1].jpg': [0,0,1,1], 
-'[1,2,2,0].jpg': [1,2,2,0], '[1,1,2,2].jpg': [1,1,2,2], '[0,1,0,0].jpg': [0,1,0,0], '[0,2,1,1].jpg': [0,2,1,1], 
-'[0,1,1,2].jpg': [0,1,1,2], '[2,2,1,1].jpg': [2,2,1,1], '[0,0,2,1].jpg': [0,0,2,1], '[1,2,1,1].jpg': [1,2,1,1], 
-'[1,1,2,0].jpg': [1,1,2,0], '[1,2,0,2].jpg': [1,2,0,2], '[1,0,2,1].jpg': [1,0,2,1], '[2,2,0,0].jpg': [2,2,0,0], 
-'[2,2,0,1].jpg': [2,2,0,1], '[1,1,1,1].jpg': [1,1,1,1], '[2,0,2,0].jpg': [2,0,2,0], '[2,0,1,0].jpg': [2,0,1,0], 
-'[1,1,1,0].jpg': [1,1,1,0], '[0,0,0,1].jpg': [0,0,0,1], '[1,2,1,0].jpg': [1,2,1,0], '[2,0,0,1].jpg': [2,0,0,1], 
-'[0,2,1,2].jpg': [0,2,1,2]
+'[0,0,0,0].jpg': [0,0,0,0], '[0,0,0,1].jpg': [0,0,0,1], '[0,0,0,2].jpg': [0,0,0,2], '[0,0,1,0].jpg': [0,0,1,0], 
+'[0,0,1,1].jpg': [0,0,1,1], '[0,0,1,2].jpg': [0,0,1,2], '[0,0,2,0].jpg': [0,0,2,0], '[0,0,2,1].jpg': [0,0,2,1], 
+'[0,0,2,2].jpg': [0,0,2,2], '[0,1,0,0].jpg': [0,1,0,0], '[0,1,0,1].jpg': [0,1,0,1], '[0,1,0,2].jpg': [0,1,0,2], 
+'[0,1,1,0].jpg': [0,1,1,0], '[0,1,1,1].jpg': [0,1,1,1], '[0,1,1,2].jpg': [0,1,1,2], '[0,1,2,0].jpg': [0,1,2,0], 
+'[0,1,2,1].jpg': [0,1,2,1], '[0,1,2,2].jpg': [0,1,2,2], '[0,2,0,0].jpg': [0,2,0,0], '[0,2,0,1].jpg': [0,2,0,1], 
+'[0,2,0,2].jpg': [0,2,0,2], '[0,2,1,0].jpg': [0,2,1,0], '[0,2,1,1].jpg': [0,2,1,1], '[0,2,1,2].jpg': [0,2,1,2], 
+'[0,2,2,0].jpg': [0,2,2,0], '[0,2,2,1].jpg': [0,2,2,1], '[0,2,2,2].jpg': [0,2,2,2], '[1,0,0,0].jpg': [1,0,0,0], 
+'[1,0,0,1].jpg': [1,0,0,1], '[1,0,0,2].jpg': [1,0,0,2], '[1,0,1,0].jpg': [1,0,1,0], '[1,0,1,1].jpg': [1,0,1,1], 
+'[1,0,1,2].jpg': [1,0,1,2], '[1,0,2,0].jpg': [1,0,2,0], '[1,0,2,1].jpg': [1,0,2,1], '[1,0,2,2].jpg': [1,0,2,2], 
+'[1,1,0,0].jpg': [1,1,0,0], '[1,1,0,1].jpg': [1,1,0,1], '[1,1,0,2].jpg': [1,1,0,2], '[1,1,1,0].jpg': [1,1,1,0], 
+'[1,1,1,1].jpg': [1,1,1,1], '[1,1,1,2].jpg': [1,1,1,2], '[1,1,2,0].jpg': [1,1,2,0], '[1,1,2,1].jpg': [1,1,2,1], 
+'[1,1,2,2].jpg': [1,1,2,2], '[1,2,0,0].jpg': [1,2,0,0], '[1,2,0,1].jpg': [1,2,0,1], '[1,2,0,2].jpg': [1,2,0,2], 
+'[1,2,1,0].jpg': [1,2,1,0], '[1,2,1,1].jpg': [1,2,1,1], '[1,2,1,2].jpg': [1,2,1,2], '[1,2,2,0].jpg': [1,2,2,0], 
+'[1,2,2,1].jpg': [1,2,2,1], '[1,2,2,2].jpg': [1,2,2,2], '[2,0,0,0].jpg': [2,0,0,0], '[2,0,0,1].jpg': [2,0,0,1], 
+'[2,0,0,2].jpg': [2,0,0,2], '[2,0,1,0].jpg': [2,0,1,0], '[2,0,1,1].jpg': [2,0,1,1], '[2,0,1,2].jpg': [2,0,1,2], 
+'[2,0,2,0].jpg': [2,0,2,0], '[2,0,2,1].jpg': [2,0,2,1], '[2,0,2,2].jpg': [2,0,2,2], '[2,1,0,0].jpg': [2,1,0,0], 
+'[2,1,0,1].jpg': [2,1,0,1], '[2,1,0,2].jpg': [2,1,0,2], '[2,1,1,0].jpg': [2,1,1,0], '[2,1,1,1].jpg': [2,1,1,1], 
+'[2,1,1,2].jpg': [2,1,1,2], '[2,1,2,0].jpg': [2,1,2,0], '[2,1,2,1].jpg': [2,1,2,1], '[2,1,2,2].jpg': [2,1,2,2], 
+'[2,2,0,0].jpg': [2,2,0,0], '[2,2,0,1].jpg': [2,2,0,1], '[2,2,0,2].jpg': [2,2,0,2], '[2,2,1,0].jpg': [2,2,1,0], 
+'[2,2,1,1].jpg': [2,2,1,1], '[2,2,1,2].jpg': [2,2,1,2], '[2,2,2,0].jpg': [2,2,2,0], '[2,2,2,1].jpg': [2,2,2,1], 
+'[2,2,2,2].jpg': [2,2,2,2], 
 }
 
 
 """slice an image into parts slice_size tall"""
-out_directory = "/users/mjortberg521/desktop"
+out_directory = "/users/mjortberg521/desktop/"
+
 image_path = "/users/mjortberg521/desktop/set12cards.png"
 img = Image.open(image_path)
 #width, height = img.size
@@ -57,7 +53,6 @@ img = Image.open(image_path)
 
 #bounding boxes
 
-bboxmaster = ()
 bbox1 = (0, 0, 716, 464)
 bbox2 = (716, 0, 1432, 464)
 bbox3 = (1432, 0, 2148, 464)
@@ -106,71 +101,57 @@ card10.save(os.path.join(out_directory, "slice_" + "10.png"))
 card11.save(os.path.join(out_directory, "slice_" + "11.png"))
 card12.save(os.path.join(out_directory, "slice_" + "12.png"))
 
-#Compare the histograms of two images
 
-# HistoCompare takes in two histograms (generated
-# using PIL) as well as an optional string and
-# an optional double.  the histograms are those
-# of the images that you want to compare.
-# If you pass in "pct" as the mode, HistoCompare
-# will return the percentage difference between
-# the histograms (out of the total value of the
-# most valuable histogram).
-# If any other string is passed in as the mode,
-# then HistoCompare will return True if the
-# percentage difference is less than alpha, and
-# False otherwise
-"""
-def histoCompare(im1, im2, mode = "pct", alpha = 100):
-	if im1.size == im2.size and im1.mode == im2.mode:
-		h1 = im1.histogram()
-		h2 = im2.histogram()
-		SumIm1 = 0.0
-		SumIm2 = 0.0
-		diff = 0.0
-		for i in range(len(h1)):
-			SumIm1 += h1[i]
-			SumIm2 += h2[i]
-			diff += abs(h1[i] - h2[i])
-		maxSum = max(SumIm1, SumIm2)
-		if mode == "pct":
-			return diff/(2*maxSum)
-		if diff > alpha*maxSum:
-			return False
-		return True
-	return False
-"""
-
-img1 = Image.open("/users/mjortberg521/desktop/SetCards/ResizedPhotos716x464/[2,1,2,0].jpg") #Template/standard
-img2 = Image.open("/users/mjortberg521/desktop/slice_4.png") #Test
-
-cv2.matchTemplate(img2, img1, CV_TM_SQDIFF)
+img1 = cv2.imread("/users/mjortberg521/desktop/SetCards/ResizedPhotos716x464/[0,0,2,1].jpg") #Template/standard
+img2 = cv2.imread("/users/mjortberg521/desktop/slice_8.png") #Test
 
 
-def matchCards(): #standard will be the one being compared against
-	cards = []
+result = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
+print result
+#cv2.imshow("result",result)
 
-	for key in cards: #another list maybe?
-		standardPath = "/users/mjortberg521/desktop/ResizedPhotos716x464/",key
-		standard = Image.open(standardPath)
-		#nest for loop?
-	for n in range(1,12,1): #from 1 to 12 by 1
-		gameCardPath = "/users/mjortberg521/desktop/slice_",n
-		gamecard = Image.open(gameCardPath)
+def makeGameCardList():
+	gameCards = {}
 
-	ismatch=histoCompare(gamecard,standard, mode = "pct", alpha = 0.01)
+	for n in range(1,13,1): #from 1 to 12 by 1
+		gameCardPath = out_directory+"slice_"+str(n)+".png"
+		gameCards[n] = gameCardPath #Adds to the gamecards dict with the number of the game img followed by its path
 
-	if ismatch == True: #If they match up
-		seq = images[standard] #Standard's attribute code
-		cards.append(seq)
-	return cards
+	return gameCards
+
+def matchCards(): #template will be the one being compared against
+	matchedCards = []
+	matchIndexDict = {}
+
+	for path in gameCards.values():
+		gameCardImg = cv2.imread(path)
+		print path
+
+		for key in images:
+			templatePath = out_directory+'SetCards/ResizedPhotos716x464/'+key
+			print templatePath
+			templateImg = cv2.imread(templatePath)
+
+			matchIndex = cv2.matchTemplate(gameCardImg, templateImg, cv2.TM_CCOEFF_NORMED)
+			print matchIndex
+
+			matchIndexDict[key] = matchIndex
+			#print matchIndexDict
+
+		mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+		seq = images[mostSimilarImg] #Get the most similar template attribute code
+		matchedCards.append(seq)
+
+	return matchedCards
+
 
 """
 def makeManualCards():
-	
 	cards = [[1, 2, 1, 2], [1, 1, 0, 2], [2, 1, 1, 1], [0, 2, 0, 1], [2, 2, 1, 1], [0, 0, 1, 2], [2, 0, 1, 1], [0, 1, 0, 0], [0, 2, 1, 1], [1, 0, 1, 0], [1, 0, 1, 1], [0, 1, 1, 2]]
-	#BELOW IS THE METHOD TO GENERATE A RANDOM SET. 
 	#ABOVE IS A SET ENTERED FROM A REAL WORLD SCENARIO
+	#BELOW IS THE METHOD TO GENERATE A RANDOM SET. 
+
 	for n in range (50): #This allows it to hit 12 cards and remove duplicates for max amount of duplicated (40.5)
 		if len(cards)<12:
 			T0 = randint(0,2) #Color
@@ -185,14 +166,19 @@ def makeManualCards():
 
 	return cards
 
-#cards = makeManualCards()
+cards = makeManualCards()
 """
+#########################################################################
+
+gameCards = makeGameCardList() #returns gameCard paths. This must run for matchCards to work
+print gameCards
 
 cards = matchCards()
 print cards
-print "Cards:", len(cards)
 
-def findCards(): #n should be 0, 1, 2, 3 to represent the position of T in the list
+#print "Cards:", len(cards)
+
+def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 	C3 = []
 
 	def decodeAttributes(c): #c is C3 or the card you are working with
@@ -234,7 +220,7 @@ def findCards(): #n should be 0, 1, 2, 3 to represent the position of T in the l
 	C2Description = decodeAttributes(C2)
 	print 'C2:', C2
 	print C2Description
-
+   
 	#SELECTING THE THIRD CARD
 	for n in range (4): 
 		if C1[n] == C2[n]:
@@ -264,18 +250,17 @@ def findCards(): #n should be 0, 1, 2, 3 to represent the position of T in the l
 		print len(cards), 'cards remaining'
 		print '--------------------------------'
 
-	for n in range (30): #This allows it to hit 12 cards and remove duplicates for max amount of duplicated (40.5)
-		while len(cards)<12:
-			T0 = randint(0,2)
-			T1 = randint(0,2)
-			T2 = randint(0,2)
-			T3 = randint(0,2)
+	#for n in range (30): #This allows it to hit 12 cards and remove duplicates for max amount of duplicated (40.5)
+		#while len(cards)<12:
+			#T0 = randint(0,2)
+			#T1 = randint(0,2)
+			#T2 = randint(0,2)
+			#T3 = randint(0,2)
 
-			seq = [T0, T1, T2, T3]
+			#seq = [T0, T1, T2, T3]
 
-			if seq not in cards: #if the card has not already been found
-				cards.append(seq)
-	print cards
+			#if seq not in cards: #if the card has not already been found
+				#cards.append(seq)
 
 	return C3
 
@@ -284,7 +269,7 @@ def playGame():
 	C3 = findCards()
 
 trials = 0
-while 0<=len(cards)<=12:
+while True:
 	trials += 1 
 	print 'Trial: ',trials
 	playGame()
