@@ -275,7 +275,7 @@ def findContours(path):
 	im = cv2.imread(path)
 	imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
-	ret, thresh = cv2.threshold(imgray, 180, 255, 0) ###############THESE VALUES ARE FOR THE SHADED DIAMOND################
+	ret, thresh = cv2.threshold(imgray, 180, 255, 0) ###############******!!!!!!DO NOT CHANGE 180 AND 255!!!!!*****################
 	im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 	#cv2.drawContours(im2, contours, -1, (0,255,0), 3)
