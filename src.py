@@ -16,32 +16,133 @@ Make the set using data from the image
 3. Add the attribute code list to the list of cards
 """
 
-images = {
-'[0,0,0,0].jpg': [0,0,0,0], '[0,0,0,1].jpg': [0,0,0,1], '[0,0,0,2].jpg': [0,0,0,2], '[0,0,1,0].jpg': [0,0,1,0], 
-'[0,0,1,1].jpg': [0,0,1,1], '[0,0,1,2].jpg': [0,0,1,2], '[0,0,2,0].jpg': [0,0,2,0], '[0,0,2,1].jpg': [0,0,2,1], 
-'[0,0,2,2].jpg': [0,0,2,2], '[0,1,0,0].jpg': [0,1,0,0], '[0,1,0,1].jpg': [0,1,0,1], '[0,1,0,2].jpg': [0,1,0,2], 
-'[0,1,1,0].jpg': [0,1,1,0], '[0,1,1,1].jpg': [0,1,1,1], '[0,1,1,2].jpg': [0,1,1,2], '[0,1,2,0].jpg': [0,1,2,0], 
-'[0,1,2,1].jpg': [0,1,2,1], '[0,1,2,2].jpg': [0,1,2,2], '[0,2,0,0].jpg': [0,2,0,0], '[0,2,0,1].jpg': [0,2,0,1], 
-'[0,2,0,2].jpg': [0,2,0,2], '[0,2,1,0].jpg': [0,2,1,0], '[0,2,1,1].jpg': [0,2,1,1], '[0,2,1,2].jpg': [0,2,1,2], 
-'[0,2,2,0].jpg': [0,2,2,0], '[0,2,2,1].jpg': [0,2,2,1], '[0,2,2,2].jpg': [0,2,2,2], '[1,0,0,0].jpg': [1,0,0,0], 
-'[1,0,0,1].jpg': [1,0,0,1], '[1,0,0,2].jpg': [1,0,0,2], '[1,0,1,0].jpg': [1,0,1,0], '[1,0,1,1].jpg': [1,0,1,1], 
-'[1,0,1,2].jpg': [1,0,1,2], '[1,0,2,0].jpg': [1,0,2,0], '[1,0,2,1].jpg': [1,0,2,1], '[1,0,2,2].jpg': [1,0,2,2], 
-'[1,1,0,0].jpg': [1,1,0,0], '[1,1,0,1].jpg': [1,1,0,1], '[1,1,0,2].jpg': [1,1,0,2], '[1,1,1,0].jpg': [1,1,1,0], 
-'[1,1,1,1].jpg': [1,1,1,1], '[1,1,1,2].jpg': [1,1,1,2], '[1,1,2,0].jpg': [1,1,2,0], '[1,1,2,1].jpg': [1,1,2,1], 
-'[1,1,2,2].jpg': [1,1,2,2], '[1,2,0,0].jpg': [1,2,0,0], '[1,2,0,1].jpg': [1,2,0,1], '[1,2,0,2].jpg': [1,2,0,2], 
-'[1,2,1,0].jpg': [1,2,1,0], '[1,2,1,1].jpg': [1,2,1,1], '[1,2,1,2].jpg': [1,2,1,2], '[1,2,2,0].jpg': [1,2,2,0], 
-'[1,2,2,1].jpg': [1,2,2,1], '[1,2,2,2].jpg': [1,2,2,2], '[2,0,0,0].jpg': [2,0,0,0], '[2,0,0,1].jpg': [2,0,0,1], 
-'[2,0,0,2].jpg': [2,0,0,2], '[2,0,1,0].jpg': [2,0,1,0], '[2,0,1,1].jpg': [2,0,1,1], '[2,0,1,2].jpg': [2,0,1,2], 
-'[2,0,2,0].jpg': [2,0,2,0], '[2,0,2,1].jpg': [2,0,2,1], '[2,0,2,2].jpg': [2,0,2,2], '[2,1,0,0].jpg': [2,1,0,0], 
-'[2,1,0,1].jpg': [2,1,0,1], '[2,1,0,2].jpg': [2,1,0,2], '[2,1,1,0].jpg': [2,1,1,0], '[2,1,1,1].jpg': [2,1,1,1], 
-'[2,1,1,2].jpg': [2,1,1,2], '[2,1,2,0].jpg': [2,1,2,0], '[2,1,2,1].jpg': [2,1,2,1], '[2,1,2,2].jpg': [2,1,2,2], 
-'[2,2,0,0].jpg': [2,2,0,0], '[2,2,0,1].jpg': [2,2,0,1], '[2,2,0,2].jpg': [2,2,0,2], '[2,2,1,0].jpg': [2,2,1,0], 
-'[2,2,1,1].jpg': [2,2,1,1], '[2,2,1,2].jpg': [2,2,1,2], '[2,2,2,0].jpg': [2,2,2,0], '[2,2,2,1].jpg': [2,2,2,1], 
-'[2,2,2,2].jpg': [2,2,2,2], 
+##All of these lists were generated using Excel
+GreenCards = {
+	
+'OneGreenShaded': { #All of the cards with one shaded object are in the range 25-45
+'[0,0,1,0].jpg': [0,0,1,0], 
+'[0,0,1,1].jpg': [0,0,1,1], 
+'[0,0,1,2].jpg': [0,0,1,2], 
+},
+
+'TwoGreenShaded': { #All of the cards with two shaded objects are in the range 60-80
+'[0,1,1,0].jpg': [0,1,1,0], 
+'[0,1,1,1].jpg': [0,1,1,1], 
+'[0,1,1,2].jpg': [0,1,1,2], 
+},
+
+'ThreeGreenShaded': {
+'[0,2,1,0].jpg': [0,2,1,0], 
+'[0,2,1,1].jpg': [0,2,1,1], 
+'[0,2,1,2].jpg': [0,2,1,2], 
+},
+
+'GreenOpenAndSolids': {
+'[0,0,0,0].jpg': [0,0,0,0], 
+'[0,0,0,1].jpg': [0,0,0,1], 
+'[0,0,0,2].jpg': [0,0,0,2], 
+'[0,0,2,0].jpg': [0,0,2,0], 
+'[0,0,2,1].jpg': [0,0,2,1], 
+'[0,0,2,2].jpg': [0,0,2,2], 
+'[0,1,0,0].jpg': [0,1,0,0], 
+'[0,1,0,1].jpg': [0,1,0,1], 
+'[0,1,0,2].jpg': [0,1,0,2], 
+'[0,1,2,0].jpg': [0,1,2,0], 
+'[0,1,2,1].jpg': [0,1,2,1], 
+'[0,1,2,2].jpg': [0,1,2,2], 
+'[0,2,0,0].jpg': [0,2,0,0], 
+'[0,2,0,1].jpg': [0,2,0,1], 
+'[0,2,0,2].jpg': [0,2,0,2], 
+'[0,2,2,0].jpg': [0,2,2,0], 
+'[0,2,2,1].jpg': [0,2,2,1], 
+'[0,2,2,2].jpg': [0,2,2,2], 
+}
 }
 
+PurpleCards = {
 
-"""slice an image into parts slice_size tall"""
+'OnePurpleShaded': {
+'[1,0,1,0].jpg': [1,0,1,0], 
+'[1,0,1,1].jpg': [1,0,1,1], 
+'[1,0,1,2].jpg': [1,0,1,2], 
+},
+
+'TwoPurpleShaded': {
+'[1,1,1,0].jpg': [1,1,1,0], 
+'[1,1,1,1].jpg': [1,1,1,1], 
+'[1,1,1,2].jpg': [1,1,1,2], 
+},
+
+'ThreePurpleShaded': {
+'[1,2,1,0].jpg': [1,2,1,0], 
+'[1,2,1,1].jpg': [1,2,1,1], 
+'[1,2,1,2].jpg': [1,2,1,2], 
+},
+
+'PurpleOpenAndSolids': {
+'[1,0,0,0].jpg': [1,0,0,0], 
+'[1,0,0,1].jpg': [1,0,0,1], 
+'[1,0,0,2].jpg': [1,0,0,2], 
+'[1,0,2,0].jpg': [1,0,2,0], 
+'[1,0,2,1].jpg': [1,0,2,1], 
+'[1,0,2,2].jpg': [1,0,2,2], 
+'[1,1,0,0].jpg': [1,1,0,0], 
+'[1,1,0,1].jpg': [1,1,0,1], 
+'[1,1,0,2].jpg': [1,1,0,2], 
+'[1,1,2,0].jpg': [1,1,2,0], 
+'[1,1,2,1].jpg': [1,1,2,1], 
+'[1,1,2,2].jpg': [1,1,2,2], 
+'[1,2,0,0].jpg': [1,2,0,0], 
+'[1,2,0,1].jpg': [1,2,0,1], 
+'[1,2,0,2].jpg': [1,2,0,2], 
+'[1,2,2,0].jpg': [1,2,2,0], 
+'[1,2,2,1].jpg': [1,2,2,1], 
+'[1,2,2,2].jpg': [1,2,2,2], 
+}
+}
+
+RedCards = {
+
+'OneRedShaded': {
+'[2,0,1,0].jpg': [2,0,1,0], 
+'[2,0,1,1].jpg': [2,0,1,1], 
+'[2,0,1,2].jpg': [2,0,1,2], 
+},
+
+'TwoRedShaded': {
+'[2,1,1,0].jpg': [2,1,1,0], 
+'[2,1,1,1].jpg': [2,1,1,1], 
+'[2,1,1,2].jpg': [2,1,1,2], 
+},
+
+'ThreeRedShaded': {
+'[2,2,1,0].jpg': [2,2,1,0], 
+'[2,2,1,1].jpg': [2,2,1,1], 
+'[2,2,1,2].jpg': [2,2,1,2], 
+},
+
+'RedOpenAndSolids': {
+'[2,0,0,0].jpg': [2,0,0,0], 
+'[2,0,0,1].jpg': [2,0,0,1], 
+'[2,0,0,2].jpg': [2,0,0,2], 
+'[2,0,2,0].jpg': [2,0,2,0], 
+'[2,0,2,1].jpg': [2,0,2,1], 
+'[2,0,2,2].jpg': [2,0,2,2], 
+'[2,1,0,0].jpg': [2,1,0,0], 
+'[2,1,0,1].jpg': [2,1,0,1], 
+'[2,1,0,2].jpg': [2,1,0,2], 
+'[2,1,2,0].jpg': [2,1,2,0], 
+'[2,1,2,1].jpg': [2,1,2,1], 
+'[2,1,2,2].jpg': [2,1,2,2], 
+'[2,2,0,0].jpg': [2,2,0,0], 
+'[2,2,0,1].jpg': [2,2,0,1], 
+'[2,2,0,2].jpg': [2,2,0,2], 
+'[2,2,2,0].jpg': [2,2,2,0], 
+'[2,2,2,1].jpg': [2,2,2,1], 
+'[2,2,2,2].jpg': [2,2,2,2], 
+}
+}
+
 out_directory = "/users/mjortberg521/desktop/"
 
 image_path = "/users/mjortberg521/desktop/set12cards.png"
@@ -52,23 +153,23 @@ img = Image.open(image_path)
 #countVertical = 1
 
 #bounding boxes
+bbox1=(50,50,666,414)
+bbox2=(766,50,1382,414)
+bbox3=(1482,50,2098,414)
 
-bbox1 = (0, 0, 716, 464)
-bbox2 = (716, 0, 1432, 464)
-bbox3 = (1432, 0, 2148, 464)
+bbox4=(50,514,666,878)
+bbox5=(766,514,1382,878)
+bbox6=(1482,514,2098,878)
 
-bbox4 = (0, 464, 716, 928)
-bbox5 = (716, 464, 1432, 928)
-bbox6 = (1432, 464, 2148, 928)
+bbox7=(50,978,666,1342)
+bbox8=(766,978,1382,1342)
+bbox9=(1482,978,2098,1342)
 
-bbox7 = (0, 928, 716, 1392)
-bbox8 = (716, 928, 1432, 1392)
-bbox9 = (1432, 928, 2148, 1392)
+bbox10=(50,1442,666,1806)
+bbox11=(766,1442,1382,1806)
+bbox12=(1482,1442,2098,1806)
 
-bbox10 = (0, 1392, 716, 1856)
-bbox11 = (716, 1392, 1432, 1856)
-bbox12 = (1432, 1392, 2148, 1856)
-
+#Crop the game image to the just the cards and save all 12 to out_directory
 card1 = img.crop(bbox1)
 card2 = img.crop(bbox2)
 card3 = img.crop(bbox3)
@@ -85,66 +186,223 @@ card10 = img.crop(bbox10)
 card11 = img.crop(bbox11)
 card12 = img.crop(bbox12)
 
-card1.save(os.path.join(out_directory, "slice_" + "1.png"))
-card2.save(os.path.join(out_directory, "slice_" + "2.png"))
-card3.save(os.path.join(out_directory, "slice_" + "3.png"))
+card1.save(os.path.join(out_directory, "slice_" + "1.jpg"))
+card2.save(os.path.join(out_directory, "slice_" + "2.jpg"))
+card3.save(os.path.join(out_directory, "slice_" + "3.jpg"))
 
-card4.save(os.path.join(out_directory, "slice_" + "4.png"))
-card5.save(os.path.join(out_directory, "slice_" + "5.png"))
-card6.save(os.path.join(out_directory, "slice_" + "6.png"))
+card4.save(os.path.join(out_directory, "slice_" + "4.jpg"))
+card5.save(os.path.join(out_directory, "slice_" + "5.jpg"))
+card6.save(os.path.join(out_directory, "slice_" + "6.jpg"))
 
-card7.save(os.path.join(out_directory, "slice_" + "7.png"))
-card8.save(os.path.join(out_directory, "slice_" + "8.png"))
-card9.save(os.path.join(out_directory, "slice_" + "9.png"))
+card7.save(os.path.join(out_directory, "slice_" + "7.jpg"))
+card8.save(os.path.join(out_directory, "slice_" + "8.jpg"))
+card9.save(os.path.join(out_directory, "slice_" + "9.jpg"))
 
-card10.save(os.path.join(out_directory, "slice_" + "10.png"))
-card11.save(os.path.join(out_directory, "slice_" + "11.png"))
-card12.save(os.path.join(out_directory, "slice_" + "12.png"))
-
-
-img1 = cv2.imread("/users/mjortberg521/desktop/SetCards/ResizedPhotos716x464/[0,0,2,1].jpg") #Template/standard
-img2 = cv2.imread("/users/mjortberg521/desktop/slice_8.png") #Test
-
-
-result = cv2.matchTemplate(img2, img1, cv2.TM_CCOEFF_NORMED)
-print result
-#cv2.imshow("result",result)
+card10.save(os.path.join(out_directory, "slice_" + "10.jpg"))
+card11.save(os.path.join(out_directory, "slice_" + "11.jpg"))
+card12.save(os.path.join(out_directory, "slice_" + "12.jpg"))
 
 def makeGameCardList():
 	gameCards = {}
+	#Make a dict with all of the game card paths
 
 	for n in range(1,13,1): #from 1 to 12 by 1
-		gameCardPath = out_directory+"slice_"+str(n)+".png"
+		gameCardPath = out_directory+"slice_"+str(n)+".jpg"
 		gameCards[n] = gameCardPath #Adds to the gamecards dict with the number of the game img followed by its path
 
 	return gameCards
+
+def findColors(path):
+	image = cv2.imread(path)
+
+	redboundaries = [
+	([14, 15, 215], [60, 60, 255]) ####RED
+	]
+
+	purpleboundaries = [
+		([100, 20, 75], [130, 60, 150]) ####PURPLE
+	]
+
+	greenboundaries = [
+		([60, 170, 25], [80, 200, 40]) ####GREEN 
+	]
+
+	for (lower, upper) in redboundaries:
+		# create NumPy arrays from the boundaries
+		lower = np.array(lower, dtype = "uint8")
+		upper = np.array(upper, dtype = "uint8")
+	 
+		# find the colors within the specified boundaries and apply the mask
+		mask = cv2.inRange(image, lower, upper)
+		redoutput = cv2.bitwise_and(image, image, mask = mask)
+
+		if np.count_nonzero(mask) > 0:
+			x = 2 #RED
+			#print "red found"
+
+	for (lower, upper) in purpleboundaries:
+		# create NumPy arrays from the boundaries
+		lower = np.array(lower, dtype = "uint8")
+		upper = np.array(upper, dtype = "uint8")
+	 
+		# find the colors within the specified boundaries and apply the mask
+		mask = cv2.inRange(image, lower, upper)
+		purpleoutput = cv2.bitwise_and(image, image, mask = mask)
+
+		if np.count_nonzero(mask) > 0:
+			#print "purple found"
+			x = 1 #PURPLE
+
+	for (lower, upper) in greenboundaries:
+		# create NumPy arrays from the boundaries
+		lower = np.array(lower, dtype = "uint8")
+		upper = np.array(upper, dtype = "uint8")
+	 
+		# find the colors within the specified boundaries and apply the mask
+		mask = cv2.inRange(image, lower, upper)
+		greenoutput = cv2.bitwise_and(image, image, mask = mask)
+
+		if np.count_nonzero(mask) > 0:
+			#print "green found"
+			x = 0 #GREEN
+
+	return x
+
+	#cv2.imshow("images", np.hstack([image, redoutput, purpleoutput, greenoutput]))
+	#cv2.waitKey(0)
+
+def findContours(path):
+	im = cv2.imread(path)
+	imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
+
+	ret, thresh = cv2.threshold(imgray, 180, 255, 0) ###############THESE VALUES ARE FOR THE SHADED DIAMOND################
+	im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+	#cv2.drawContours(im2, contours, -1, (0,255,0), 3)
+
+	#cv2.imshow("im2", im2)
+	y = len(contours)
+
+	#print contours
+	return y
+
+def templateMatch(cardDict, gameCardPath): #path is the path of the gameCardImg
+	matchIndexDict = {}
+
+	for key in cardDict: #Compare the current game img against all  templates in cardDict to find the most similar
+		templatePath = out_directory+'SetCards/ResizedPhotos716x464/'+key
+		templateImg = cv2.imread(templatePath)
+		gameCardImg = cv2.imread(gameCardPath)
+
+		matchIndex = cv2.matchTemplate(gameCardImg, templateImg, cv2.TM_CCOEFF_NORMED)
+		min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(matchIndex)
+
+		matchIndexDict[key] = max_val #Add the template name and its similarity score to the dict
+
+	return matchIndexDict
 
 def matchCards(): #template will be the one being compared against
 	matchedCards = []
 	matchIndexDict = {}
 
-	for path in gameCards.values():
+	for path in gameCards.values(): #For each of the paths in the gameCards dict, load the image
 		gameCardImg = cv2.imread(path)
-		print path
 
-		for key in images:
-			templatePath = out_directory+'SetCards/ResizedPhotos716x464/'+key
-			print templatePath
-			templateImg = cv2.imread(templatePath)
+		x = findColors(path)
+		print x
+		y = findContours(path)
+		print y
 
-			matchIndex = cv2.matchTemplate(gameCardImg, templateImg, cv2.TM_CCOEFF_NORMED)
-			print matchIndex
+		if x == 0: #Green
+			if 25<y<58: #If it is one shaded card
 
-			matchIndexDict[key] = matchIndex
-			#print matchIndexDict
+				matchIndexDict = templateMatch(GreenCards['OneGreenShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
 
-		mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				seq = GreenCards['OneGreenShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
 
-		seq = images[mostSimilarImg] #Get the most similar template attribute code
-		matchedCards.append(seq)
+			elif 60<y<80: 
+				matchIndexDict = templateMatch(GreenCards['TwoGreenShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = GreenCards['TwoGreenShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+			elif 95<y<120:
+				matchIndexDict = templateMatch(GreenCards['ThreeGreenShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = GreenCards['ThreeGreenShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+			else:
+				matchIndexDict = templateMatch(GreenCards['GreenOpenAndSolids'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = GreenCards['GreenOpenAndSolids'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+
+		if x == 1: #Purple
+			if 25<y<58: #If it is one shaded card
+				matchIndexDict = templateMatch(PurpleCards['OnePurpleShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = PurpleCards['OnePurpleShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+			elif 60<y<80: 
+				matchIndexDict = templateMatch(PurpleCards['TwoPurpleShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = PurpleCards['TwoPurpleShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+			elif 95<y<120:
+				matchIndexDict = templateMatch(PurpleCards['ThreePurpleShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = PurpleCards['ThreePurpleShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+			else:
+				matchIndexDict = templateMatch(PurpleCards['PurpleOpenAndSolids'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = PurpleCards['PurpleOpenAndSolids'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+		if x ==2: #Red
+			if 25<y<58: #If it is one shaded card
+				matchIndexDict = templateMatch(RedCards['OneRedShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = RedCards['OneRedShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+			elif 60<y<80: 
+				matchIndexDict = templateMatch(RedCards['TwoRedShaded'], path) #Generate a dictionary of the match index vals
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+
+				seq = RedCards['TwoRedShaded'][mostSimilarImg] #Get the most similar template attribute code
+				matchedCards.append(seq)
+
+			elif 95<y<120:
+				matchIndexDict = templateMatch(RedCards['ThreeRedShaded'], path) 
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
+
+				seq = RedCards['ThreeRedShaded'][mostSimilarImg] 
+				matchedCards.append(seq)
+
+			else:
+				matchIndexDict = templateMatch(RedCards['RedOpenAndSolids'], path) 
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
+
+				seq = RedCards['RedOpenAndSolids'][mostSimilarImg] 
+				matchedCards.append(seq)	
 
 	return matchedCards
-
 
 """
 def makeManualCards():
