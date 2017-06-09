@@ -2,19 +2,14 @@ from __future__ import division
 import random
 from random import randint
 import time
+import PIL
 from PIL import Image
 import math
 import os
 import cv2
 import numpy as np
 
-
-"""
-Make the set using data from the image
-1. Make a dictionary with image files and their attribute code lists DONE
-2. Identify each card of the 12 by comparing it to all stored files in the program. When a match is found, save the attribute code list of the found image 
-3. Add the attribute code list to the list of cards
-"""
+##TODO: Save all sets found as images in a folder
 
 ##All of these lists were generated using Excel
 GreenCards = {
@@ -144,9 +139,16 @@ RedCards = {
 }
 
 out_directory = "/users/mjortberg521/desktop/"
-
-image_path = "/users/mjortberg521/desktop/set12cards.png"
+"""
+"img_1001.jpg"
+"set12cards.png"
+"""
+image_name = "Set12Cards.png"
+#raw_input("Please enter the image file name:")
+image_path = "/users/mjortberg521/desktop/"+ (image_name)
 img = Image.open(image_path)
+img = img.resize((2148, 1856), PIL.Image.ANTIALIAS)
+
 #width, height = img.size
 #verticalSlices = 4 #int(math.ceil(height/450)) #Each card 450 pixels tall
 #horizontalSlices = 3 #int(math.ceil(width/700)) #Each card is 700 or so pixels wide
@@ -213,6 +215,7 @@ def makeGameCardList():
 	return gameCards
 
 def findColors(path):
+	
 	image = cv2.imread(path)
 
 	redboundaries = [
@@ -224,8 +227,11 @@ def findColors(path):
 	]
 
 	greenboundaries = [
-		([60, 170, 25], [80, 200, 40]) ####GREEN 
+		([60, 120, 30], [120, 255, 100]) ####GREEN 
 	]
+
+	x = None #Put these here to prevent the "ref before assignment error"
+	color = None
 
 	for (lower, upper) in redboundaries:
 		# create NumPy arrays from the boundaries
@@ -233,25 +239,25 @@ def findColors(path):
 		upper = np.array(upper, dtype = "uint8")
 	 
 		# find the colors within the specified boundaries and apply the mask
-		mask = cv2.inRange(image, lower, upper)
-		redoutput = cv2.bitwise_and(image, image, mask = mask)
+		redMask = cv2.inRange(image, lower, upper)
+		redoutput = cv2.bitwise_and(image, image, mask = redMask)
 
-		if np.count_nonzero(mask) > 0:
-			x = 2 #RED
+		x = np.count_nonzero(redMask)
+		#	x = 2 #RED
 			#print "red found"
-
+			
 	for (lower, upper) in purpleboundaries:
 		# create NumPy arrays from the boundaries
 		lower = np.array(lower, dtype = "uint8")
 		upper = np.array(upper, dtype = "uint8")
 	 
 		# find the colors within the specified boundaries and apply the mask
-		mask = cv2.inRange(image, lower, upper)
-		purpleoutput = cv2.bitwise_and(image, image, mask = mask)
+		purpleMask = cv2.inRange(image, lower, upper)
+		purpleoutput = cv2.bitwise_and(image, image, mask = purpleMask)
 
-		if np.count_nonzero(mask) > 0:
+		y = np.count_nonzero(purpleMask) 
 			#print "purple found"
-			x = 1 #PURPLE
+		#	x = 1 #PURPLE
 
 	for (lower, upper) in greenboundaries:
 		# create NumPy arrays from the boundaries
@@ -259,14 +265,28 @@ def findColors(path):
 		upper = np.array(upper, dtype = "uint8")
 	 
 		# find the colors within the specified boundaries and apply the mask
-		mask = cv2.inRange(image, lower, upper)
-		greenoutput = cv2.bitwise_and(image, image, mask = mask)
+		greenMask = cv2.inRange(image, lower, upper)
+		greenoutput = cv2.bitwise_and(image, image, mask = greenMask)
 
-		if np.count_nonzero(mask) > 0:
-			#print "green found"
-			x = 0 #GREEN
+		z = np.count_nonzero(greenMask) 
 
-	return x
+
+	maximum = max(x, y, z)
+
+	if maximum == x: #red
+		c = 2
+		color = 'Red'
+
+	elif maximum == y: #purple
+		c = 0
+		color = 'Purple'
+
+	elif maximum == z: #green
+		c = 1
+		color = 'Green'
+
+
+	return color
 
 	#cv2.imshow("images", np.hstack([image, redoutput, purpleoutput, greenoutput]))
 	#cv2.waitKey(0)
@@ -275,7 +295,7 @@ def findContours(path):
 	im = cv2.imread(path)
 	imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
-	ret, thresh = cv2.threshold(imgray, 180, 255, 0) ###############******!!!!!!DO NOT CHANGE 180 AND 255!!!!!*****################
+	ret, thresh = cv2.threshold(imgray, 160, 255, 0) ###############THESE VALUES ARE FOR THE SHADED DIAMOND################
 	im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 	#cv2.drawContours(im2, contours, -1, (0,255,0), 3)
@@ -286,7 +306,7 @@ def findContours(path):
 	#print contours
 	return y
 
-def templateMatch(cardDict, gameCardPath): #path is the path of the gameCardImg
+def templateMatch(cardDict, gameCardPath): 
 	matchIndexDict = {}
 
 	for key in cardDict: #Compare the current game img against all  templates in cardDict to find the most similar
@@ -299,93 +319,103 @@ def templateMatch(cardDict, gameCardPath): #path is the path of the gameCardImg
 
 		matchIndexDict[key] = max_val #Add the template name and its similarity score to the dict
 
+		#Return a dictionary with key = template name and value = similarity score
+
 	return matchIndexDict
 
-def matchCards(): #template will be the one being compared against
+
+def matchCards(): #Method to find the filename (and thus attribute code) of the cards in the image
 	matchedCards = []
 	matchIndexDict = {}
+	
+	#MakeGameCards is called before matchCards
+	#You need a list of all the gameCard paths to run the color, contour, and comparison functions
 
 	for path in gameCards.values(): #For each of the paths in the gameCards dict, load the image
+	
 		gameCardImg = cv2.imread(path)
 
-		x = findColors(path)
-		print x
+		color = findColors(path)
+
+		print 'Color:', color
+
 		y = findContours(path)
-		print y
+		print 'Contours:',y
 
-		if x == 0: #Green
+		if color == "Green": #Green
 			if 25<y<58: #If it is one shaded card
+				#This will template match the current gameCard against all cards in the specific color/shade dict
 
-				matchIndexDict = templateMatch(GreenCards['OneGreenShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(GreenCards['OneGreenShaded'], path) #Generate a dictionary of the match index vals with key=template name and value = similarity score
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index-this is the template name
 
-				seq = GreenCards['OneGreenShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = GreenCards['OneGreenShaded'][mostSimilarImg] #Get the most similar template attribute code using the key mostSimilarImg
 				matchedCards.append(seq)
 
 			elif 60<y<80: 
-				matchIndexDict = templateMatch(GreenCards['TwoGreenShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(GreenCards['TwoGreenShaded'], path) 
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = GreenCards['TwoGreenShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = GreenCards['TwoGreenShaded'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 			elif 95<y<120:
-				matchIndexDict = templateMatch(GreenCards['ThreeGreenShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(GreenCards['ThreeGreenShaded'], path)
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = GreenCards['ThreeGreenShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = GreenCards['ThreeGreenShaded'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 			else:
-				matchIndexDict = templateMatch(GreenCards['GreenOpenAndSolids'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(GreenCards['GreenOpenAndSolids'], path) 
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = GreenCards['GreenOpenAndSolids'][mostSimilarImg] #Get the most similar template attribute code
+				seq = GreenCards['GreenOpenAndSolids'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 
-		if x == 1: #Purple
-			if 25<y<58: #If it is one shaded card
-				matchIndexDict = templateMatch(PurpleCards['OnePurpleShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+		if color == "Purple": #Purple
+			if 25<y<58: 
+				matchIndexDict = templateMatch(PurpleCards['OnePurpleShaded'], path) 
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = PurpleCards['OnePurpleShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = PurpleCards['OnePurpleShaded'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 			elif 60<y<80: 
-				matchIndexDict = templateMatch(PurpleCards['TwoPurpleShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(PurpleCards['TwoPurpleShaded'], path) 
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = PurpleCards['TwoPurpleShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = PurpleCards['TwoPurpleShaded'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 			elif 95<y<120:
-				matchIndexDict = templateMatch(PurpleCards['ThreePurpleShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(PurpleCards['ThreePurpleShaded'], path)
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = PurpleCards['ThreePurpleShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = PurpleCards['ThreePurpleShaded'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 			else:
-				matchIndexDict = templateMatch(PurpleCards['PurpleOpenAndSolids'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(PurpleCards['PurpleOpenAndSolids'], path)
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = PurpleCards['PurpleOpenAndSolids'][mostSimilarImg] #Get the most similar template attribute code
+				seq = PurpleCards['PurpleOpenAndSolids'][mostSimilarImg] 
 				matchedCards.append(seq)
 
-		if x ==2: #Red
-			if 25<y<58: #If it is one shaded card
-				matchIndexDict = templateMatch(RedCards['OneRedShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+		if color == "Red": #Red
+			if 25<y<58: 
+				matchIndexDict = templateMatch(RedCards['OneRedShaded'], path)
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get)
 
-				seq = RedCards['OneRedShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = RedCards['OneRedShaded'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 			elif 60<y<80: 
-				matchIndexDict = templateMatch(RedCards['TwoRedShaded'], path) #Generate a dictionary of the match index vals
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index
+				matchIndexDict = templateMatch(RedCards['TwoRedShaded'], path) 
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) 
 
-				seq = RedCards['TwoRedShaded'][mostSimilarImg] #Get the most similar template attribute code
+				seq = RedCards['TwoRedShaded'][mostSimilarImg] 
 				matchedCards.append(seq)
 
 			elif 95<y<120:
@@ -428,11 +458,11 @@ cards = makeManualCards()
 """
 #########################################################################
 
-gameCards = makeGameCardList() #returns gameCard paths. This must run for matchCards to work
+gameCards = makeGameCardList() #returns gameCard paths
 print gameCards
 
 cards = matchCards()
-print cards
+print cards #This is a list of the card attribute codes
 
 #print "Cards:", len(cards)
 
@@ -460,7 +490,7 @@ def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 		return statement
 
 	def chooseCardOne():
-		C1 = cards[randint(0,len(cards))] #Select card 1 out of the list of cards
+		C1 = cards[randint(0,len(cards)-1)] #Select card 1 out of the list of cards. Need to subtract 1 because of the length of cards
 		cards.remove(C1)
 		return C1
 
@@ -470,7 +500,7 @@ def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 	print C1Description
 
 	def chooseCardTwo():
-		C2 = cards[randint(0,len(cards))] #Select card 2 out of 11 cards remaining
+		C2 = cards[randint(0,len(cards)-1)] #Select card 2 out of 11 cards remaining
 		cards.remove(C2)
 		return C2
 
@@ -499,6 +529,29 @@ def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 		print "you need to select", C3Description
 		print len(cards), 'cards remaining'
 		print(cards)
+
+		C3 = ''.join(str(i) for i in C3)
+		C2 = ''.join(str(i) for i in C2)
+		C1 = ''.join(str(i) for i in C1)
+
+		C3 = str('['+C3[0]+','+C3[1]+','+C3[2]+','+C3[3]+']') #The filenames don't contain spaces and the dicts don't either
+		C2 = str('['+C2[0]+','+C2[1]+','+C2[2]+','+C2[3]+']') #So we will remove the spaces here
+		C1 = str('['+C1[0]+','+C1[1]+','+C1[2]+','+C1[3]+']')
+		
+
+		C3TemplatePath = str("/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C3)+".jpg")
+		C3UXimg = cv2.imread(C3TemplatePath)
+		cv2.imshow("C3", C3UXimg)
+		
+		C2TemplatePath = "/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C2)+".jpg"
+		C2UXimg = cv2.imread(C2TemplatePath)
+		cv2.imshow("C2",C2UXimg)
+
+		C1TemplatePath = "/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C1)+".jpg"
+		C1UXimg = cv2.imread(C1TemplatePath)
+		cv2.imshow("C1",C1UXimg)
+		#time.sleep(5000)
+
 		print '--------------------------------'
 		
 	else: 
@@ -525,11 +578,17 @@ def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 def playGame(): 
 	
 	C3 = findCards()
+	
 
 trials = 0
 while True:
 	trials += 1 
 	print 'Trial: ',trials
 	playGame()
+	cv2.waitKey(1) #Keep so that it can display multiple found sets at once
 
-	time.sleep(.25)
+	if trials > 200:
+		print "No more sets to be found!"
+		break
+
+	time.sleep(.05)
