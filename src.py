@@ -9,7 +9,6 @@ import os
 import cv2
 import numpy as np
 
-##TODO: Save all sets found as images in a folder
 
 ##All of these lists were generated using Excel
 GreenCards = {
@@ -143,11 +142,11 @@ out_directory = "/users/mjortberg521/desktop/"
 "img_1001.jpg"
 "set12cards.png"
 """
-image_name = "Set12Cards.png"
+image_name = "gameImg6.jpg"
 #raw_input("Please enter the image file name:")
 image_path = "/users/mjortberg521/desktop/"+ (image_name)
 img = Image.open(image_path)
-img = img.resize((2148, 1856), PIL.Image.ANTIALIAS)
+img = img.resize((2148, 1856)) #PIL.Image.ANTIALIAS
 
 #width, height = img.size
 #verticalSlices = 4 #int(math.ceil(height/450)) #Each card 450 pixels tall
@@ -188,28 +187,28 @@ card10 = img.crop(bbox10)
 card11 = img.crop(bbox11)
 card12 = img.crop(bbox12)
 
-card1.save(os.path.join(out_directory, "slice_" + "1.jpg"))
-card2.save(os.path.join(out_directory, "slice_" + "2.jpg"))
-card3.save(os.path.join(out_directory, "slice_" + "3.jpg"))
+card1.save(os.path.join(out_directory, "setslices/slice_" + "1.jpg"))
+card2.save(os.path.join(out_directory, "setslices/slice_" + "2.jpg"))
+card3.save(os.path.join(out_directory, "setslices/slice_" + "3.jpg"))
 
-card4.save(os.path.join(out_directory, "slice_" + "4.jpg"))
-card5.save(os.path.join(out_directory, "slice_" + "5.jpg"))
-card6.save(os.path.join(out_directory, "slice_" + "6.jpg"))
+card4.save(os.path.join(out_directory, "setslices/slice_" + "4.jpg"))
+card5.save(os.path.join(out_directory, "setslices/slice_" + "5.jpg"))
+card6.save(os.path.join(out_directory, "setslices/slice_" + "6.jpg"))
 
-card7.save(os.path.join(out_directory, "slice_" + "7.jpg"))
-card8.save(os.path.join(out_directory, "slice_" + "8.jpg"))
-card9.save(os.path.join(out_directory, "slice_" + "9.jpg"))
+card7.save(os.path.join(out_directory, "setslices/slice_" + "7.jpg"))
+card8.save(os.path.join(out_directory, "setslices/slice_" + "8.jpg"))
+card9.save(os.path.join(out_directory, "setslices/slice_" + "9.jpg"))
 
-card10.save(os.path.join(out_directory, "slice_" + "10.jpg"))
-card11.save(os.path.join(out_directory, "slice_" + "11.jpg"))
-card12.save(os.path.join(out_directory, "slice_" + "12.jpg"))
+card10.save(os.path.join(out_directory, "setslices/slice_" + "10.jpg"))
+card11.save(os.path.join(out_directory, "setslices/slice_" + "11.jpg"))
+card12.save(os.path.join(out_directory, "setslices/slice_" + "12.jpg"))
 
 def makeGameCardList():
 	gameCards = {}
 	#Make a dict with all of the game card paths
 
 	for n in range(1,13,1): #from 1 to 12 by 1
-		gameCardPath = out_directory+"slice_"+str(n)+".jpg"
+		gameCardPath = out_directory+"setslices/slice_"+str(n)+".jpg"
 		gameCards[n] = gameCardPath #Adds to the gamecards dict with the number of the game img followed by its path
 
 	return gameCards
@@ -223,11 +222,11 @@ def findColors(path):
 	]
 
 	purpleboundaries = [
-		([100, 20, 75], [130, 60, 150]) ####PURPLE
+	([100, 20, 75], [130, 60, 150]) ####PURPLE
 	]
 
 	greenboundaries = [
-		([60, 120, 30], [120, 255, 100]) ####GREEN 
+	([60, 120, 30], [120, 255, 100]) ####GREEN 
 	]
 
 	x = None #Put these here to prevent the "ref before assignment error"
@@ -311,6 +310,7 @@ def templateMatch(cardDict, gameCardPath):
 
 	for key in cardDict: #Compare the current game img against all  templates in cardDict to find the most similar
 		templatePath = out_directory+'SetCards/ResizedPhotos716x464/'+key
+
 		templateImg = cv2.imread(templatePath)
 		gameCardImg = cv2.imread(gameCardPath)
 
@@ -347,7 +347,7 @@ def matchCards(): #Method to find the filename (and thus attribute code) of the 
 				#This will template match the current gameCard against all cards in the specific color/shade dict
 
 				matchIndexDict = templateMatch(GreenCards['OneGreenShaded'], path) #Generate a dictionary of the match index vals with key=template name and value = similarity score
-				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the maximum similarity index-this is the template name
+				mostSimilarImg = max(matchIndexDict, key = matchIndexDict.get) #Gets the key corresponding to the card with the maximum similarity index-this is the template name
 
 				seq = GreenCards['OneGreenShaded'][mostSimilarImg] #Get the most similar template attribute code using the key mostSimilarImg
 				matchedCards.append(seq)
@@ -466,8 +466,10 @@ print cards #This is a list of the card attribute codes
 
 #print "Cards:", len(cards)
 
-def findCards(): #0, 1, 2, 3 to represent the position of T in the list
+def findCards(n): #0, 1, 2, 3 to represent the position of T in the list
+	
 	C3 = []
+	trialCount = n #number of the set
 
 	def decodeAttributes(c): #c is C3 or the card you are working with
 		colorDig = c[0] 
@@ -525,6 +527,7 @@ def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 	print C3Description
 	
 	if C3 in cards:
+		print trialCount
 		cards.remove(C3)
 		print "you need to select", C3Description
 		print len(cards), 'cards remaining'
@@ -541,15 +544,18 @@ def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 
 		C3TemplatePath = str("/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C3)+".jpg")
 		C3UXimg = cv2.imread(C3TemplatePath)
-		cv2.imshow("C3", C3UXimg)
+		C3name = str(C3)+", Trial: "+str(trialCount)
+		cv2.imshow(C3name, C3UXimg)
 		
 		C2TemplatePath = "/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C2)+".jpg"
 		C2UXimg = cv2.imread(C2TemplatePath)
-		cv2.imshow("C2",C2UXimg)
+		C2name = str(C2)+", Trial: "+str(trialCount)
+		cv2.imshow(C2name,C2UXimg)
 
 		C1TemplatePath = "/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C1)+".jpg"
 		C1UXimg = cv2.imread(C1TemplatePath)
-		cv2.imshow("C1",C1UXimg)
+		C1name = str(C1)+", Trial: "+str(trialCount)
+		cv2.imshow(C1name,C1UXimg)
 		#time.sleep(5000)
 
 		print '--------------------------------'
@@ -575,20 +581,21 @@ def findCards(): #0, 1, 2, 3 to represent the position of T in the list
 
 	return C3
 
-def playGame(): 
-	
-	C3 = findCards()
+
+
 	
 
 trials = 0
 while True:
 	trials += 1 
 	print 'Trial: ',trials
-	playGame()
-	cv2.waitKey(1) #Keep so that it can display multiple found sets at once
+	findCards(trials)
 
-	if trials > 200:
+	cv2.waitKey(1) 
+
+	if trials > 199:
 		print "No more sets to be found!"
+		time.sleep(10000)
 		break
 
 	time.sleep(.05)
