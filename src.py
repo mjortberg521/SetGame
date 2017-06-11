@@ -9,6 +9,15 @@ import os
 import cv2
 import numpy as np
 
+##To run this program, OpenCV must be installed##
+
+directory = "/users/mjortberg521/desktop/" #Replace this line with the file path to the directory that you are using
+template_file_path = directory+"SetCards/resizedphotos716x464/" #Replace this line with the file path to the folder of template images downloaded from GitHub
+
+twelve_cards_image_name = "gameImg3.jpg" #Replace this with the name of the image containing the 12 card SET you want to solve. 
+										 #The image must be cropped with 3 cards going across horizontally and 4 cards going down vertically
+
+twelve_cards_image_path = directory + twelve_cards_image_name
 
 ##All of these lists were generated using Excel
 GreenCards = {
@@ -137,16 +146,14 @@ RedCards = {
 }
 }
 
-out_directory = "/users/mjortberg521/desktop/"
+
 """
 "img_1001.jpg"
 "set12cards.png"
 """
-image_name = "gameImg6.jpg"
-#raw_input("Please enter the image file name:")
-image_path = "/users/mjortberg521/desktop/"+ (image_name)
-img = Image.open(image_path)
-img = img.resize((2148, 1856)) #PIL.Image.ANTIALIAS
+
+img = Image.open(twelve_cards_image_path) #Open the image from the path entered at the beginning of the program
+img = img.resize((2148, 1856), PIL.Image.ANTIALIAS) 
 
 #width, height = img.size
 #verticalSlices = 4 #int(math.ceil(height/450)) #Each card 450 pixels tall
@@ -170,7 +177,7 @@ bbox10=(50,1442,666,1806)
 bbox11=(766,1442,1382,1806)
 bbox12=(1482,1442,2098,1806)
 
-#Crop the game image to the just the cards and save all 12 to out_directory
+#Crop the game image to the just the cards and save all 12 to directory
 card1 = img.crop(bbox1)
 card2 = img.crop(bbox2)
 card3 = img.crop(bbox3)
@@ -187,28 +194,28 @@ card10 = img.crop(bbox10)
 card11 = img.crop(bbox11)
 card12 = img.crop(bbox12)
 
-card1.save(os.path.join(out_directory, "setslices/slice_" + "1.jpg"))
-card2.save(os.path.join(out_directory, "setslices/slice_" + "2.jpg"))
-card3.save(os.path.join(out_directory, "setslices/slice_" + "3.jpg"))
+card1.save(os.path.join(directory, "setslices/slice_" + "1.jpg"))
+card2.save(os.path.join(directory, "setslices/slice_" + "2.jpg"))
+card3.save(os.path.join(directory, "setslices/slice_" + "3.jpg"))
 
-card4.save(os.path.join(out_directory, "setslices/slice_" + "4.jpg"))
-card5.save(os.path.join(out_directory, "setslices/slice_" + "5.jpg"))
-card6.save(os.path.join(out_directory, "setslices/slice_" + "6.jpg"))
+card4.save(os.path.join(directory, "setslices/slice_" + "4.jpg"))
+card5.save(os.path.join(directory, "setslices/slice_" + "5.jpg"))
+card6.save(os.path.join(directory, "setslices/slice_" + "6.jpg"))
 
-card7.save(os.path.join(out_directory, "setslices/slice_" + "7.jpg"))
-card8.save(os.path.join(out_directory, "setslices/slice_" + "8.jpg"))
-card9.save(os.path.join(out_directory, "setslices/slice_" + "9.jpg"))
+card7.save(os.path.join(directory, "setslices/slice_" + "7.jpg"))
+card8.save(os.path.join(directory, "setslices/slice_" + "8.jpg"))
+card9.save(os.path.join(directory, "setslices/slice_" + "9.jpg"))
 
-card10.save(os.path.join(out_directory, "setslices/slice_" + "10.jpg"))
-card11.save(os.path.join(out_directory, "setslices/slice_" + "11.jpg"))
-card12.save(os.path.join(out_directory, "setslices/slice_" + "12.jpg"))
+card10.save(os.path.join(directory, "setslices/slice_" + "10.jpg"))
+card11.save(os.path.join(directory, "setslices/slice_" + "11.jpg"))
+card12.save(os.path.join(directory, "setslices/slice_" + "12.jpg"))
 
 def makeGameCardList():
 	gameCards = {}
 	#Make a dict with all of the game card paths
 
 	for n in range(1,13,1): #from 1 to 12 by 1
-		gameCardPath = out_directory+"setslices/slice_"+str(n)+".jpg"
+		gameCardPath = directory+"setslices/slice_"+str(n)+".jpg"
 		gameCards[n] = gameCardPath #Adds to the gamecards dict with the number of the game img followed by its path
 
 	return gameCards
@@ -294,7 +301,7 @@ def findContours(path):
 	im = cv2.imread(path)
 	imgray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
 
-	ret, thresh = cv2.threshold(imgray, 160, 255, 0) ###############THESE VALUES ARE FOR THE SHADED DIAMOND################
+	ret, thresh = cv2.threshold(imgray, 180, 255, 0) ###############THESE VALUES ARE FOR THE SHADED DIAMOND################
 	im2, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 	#cv2.drawContours(im2, contours, -1, (0,255,0), 3)
@@ -308,8 +315,11 @@ def findContours(path):
 def templateMatch(cardDict, gameCardPath): 
 	matchIndexDict = {}
 
+	#For dictionary keys in a for loop, use "for n in d"
+	#For dictionary values in a for loop, use "for n in d.values"
+
 	for key in cardDict: #Compare the current game img against all  templates in cardDict to find the most similar
-		templatePath = out_directory+'SetCards/ResizedPhotos716x464/'+key
+		templatePath = directory+'SetCards/ResizedPhotos716x464/'+key
 
 		templateImg = cv2.imread(templatePath)
 		gameCardImg = cv2.imread(gameCardPath)
@@ -466,10 +476,10 @@ print cards #This is a list of the card attribute codes
 
 #print "Cards:", len(cards)
 
-def findCards(n): #0, 1, 2, 3 to represent the position of T in the list
+def findCards(z): #0, 1, 2, 3 to represent the position of T in the list
 	
 	C3 = []
-	trialCount = n #number of the set
+	trialCount = z #n is the trial variable iterated when running the program
 
 	def decodeAttributes(c): #c is C3 or the card you are working with
 		colorDig = c[0] 
@@ -542,17 +552,17 @@ def findCards(n): #0, 1, 2, 3 to represent the position of T in the list
 		C1 = str('['+C1[0]+','+C1[1]+','+C1[2]+','+C1[3]+']')
 		
 
-		C3TemplatePath = str("/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C3)+".jpg")
+		C3TemplatePath = template_file_path+str(C3)+".jpg"
 		C3UXimg = cv2.imread(C3TemplatePath)
 		C3name = str(C3)+", Trial: "+str(trialCount)
 		cv2.imshow(C3name, C3UXimg)
 		
-		C2TemplatePath = "/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C2)+".jpg"
+		C2TemplatePath = template_file_path+str(C2)+".jpg"
 		C2UXimg = cv2.imread(C2TemplatePath)
 		C2name = str(C2)+", Trial: "+str(trialCount)
 		cv2.imshow(C2name,C2UXimg)
 
-		C1TemplatePath = "/users/mjortberg521/desktop/SetCards/resizedphotos716x464/"+str(C1)+".jpg"
+		C1TemplatePath = template_file_path+str(C1)+".jpg"
 		C1UXimg = cv2.imread(C1TemplatePath)
 		C1name = str(C1)+", Trial: "+str(trialCount)
 		cv2.imshow(C1name,C1UXimg)
@@ -582,9 +592,6 @@ def findCards(n): #0, 1, 2, 3 to represent the position of T in the list
 	return C3
 
 
-
-	
-
 trials = 0
 while True:
 	trials += 1 
@@ -598,4 +605,4 @@ while True:
 		time.sleep(10000)
 		break
 
-	time.sleep(.05)
+	time.sleep(.0000001)
