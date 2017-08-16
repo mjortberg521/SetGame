@@ -438,7 +438,7 @@ print cards #This is a list of the card attribute codes
 cardsNoSpaces = []
 
 for card in cards:
-	newCard = ''.join(str(i) for i in card) #Remove all spaces from the filenames-Python added spaces when creating C3
+	newCard = ''.join(str(i) for i in card) #Remove all spaces from the filenames
 	cardsNoSpaces.append(newCard)
 
 print cardsNoSpaces #Dict key must be tuple so all names have been changed to 4 digs now, not lists
@@ -477,10 +477,13 @@ cardBoxPositions2 = {
 
 #print "Cards:", len(cards)
 
+foundSets = 0
+
 def findCards(trials): #0, 1, 2, 3 to represent the position of T in the list
 	
 	C3 = []
 	trialCount = trials #n is the trial variable iterated when running the program
+
 
 	def decodeAttributes(c): #c is C3 or the card you are working with
 		colorDig = c[0] 
@@ -538,6 +541,8 @@ def findCards(trials): #0, 1, 2, 3 to represent the position of T in the list
 	print C3Description
 	
 	if C3 in cards:
+		global foundSets
+		foundSets+=1
 
 		print trialCount
 		cards.remove(C3)
@@ -550,14 +555,29 @@ def findCards(trials): #0, 1, 2, 3 to represent the position of T in the list
 		C1 = ''.join(str(i) for i in C1)
 
 		#While there are no spaces in the card names temporarily, use them to draw boxes around the cards on the original image
+		if foundSets == 1: 
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C1], cardBoxPositions2[C1], (255,0,0), 6)
+			cv2.putText(twelve_cards_image, "Card 1, Trial: "+str(trials), cardBoxPositions1[C1], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C2], cardBoxPositions2[C2], (255,0,0), 6)
+			cv2.putText(twelve_cards_image, "Card 2, Trial: "+str(trials), cardBoxPositions1[C2], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C3], cardBoxPositions2[C3], (255,0,0), 6)
+			cv2.putText(twelve_cards_image, "Card 3, Trial: "+str(trials), cardBoxPositions1[C3], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
 
-		cv2.rectangle(twelve_cards_image, cardBoxPositions1[C1], cardBoxPositions2[C1], (255,0,0), 6)
-		cv2.putText(twelve_cards_image, "Card 1, Trial: "+str(trials), cardBoxPositions1[C1], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
-		cv2.rectangle(twelve_cards_image, cardBoxPositions1[C2], cardBoxPositions2[C2], (0,255,0), 6)
-		cv2.putText(twelve_cards_image, "Card 2, Trial: "+str(trials), cardBoxPositions1[C2], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
-		cv2.rectangle(twelve_cards_image, cardBoxPositions1[C3], cardBoxPositions2[C3], (0,0,255), 6)
-		cv2.putText(twelve_cards_image, "Card 3, Trial: "+str(trials), cardBoxPositions1[C3], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
+		if foundSets == 2: 
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C1], cardBoxPositions2[C1], (0,255,0), 6)
+			cv2.putText(twelve_cards_image, "Card 1, Trial: "+str(trials), cardBoxPositions1[C1], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C2], cardBoxPositions2[C2], (0,255,0), 6)
+			cv2.putText(twelve_cards_image, "Card 2, Trial: "+str(trials), cardBoxPositions1[C2], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C3], cardBoxPositions2[C3], (0,255,0), 6)
+			cv2.putText(twelve_cards_image, "Card 3, Trial: "+str(trials), cardBoxPositions1[C3], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
 
+		else:
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C1], cardBoxPositions2[C1], (0,0,255), 6)
+			cv2.putText(twelve_cards_image, "Card 1, Trial: "+str(trials), cardBoxPositions1[C1], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C2], cardBoxPositions2[C2], (0,0,255), 6)
+			cv2.putText(twelve_cards_image, "Card 2, Trial: "+str(trials), cardBoxPositions1[C2], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
+			cv2.rectangle(twelve_cards_image, cardBoxPositions1[C3], cardBoxPositions2[C3], (0,0,255), 6)
+			cv2.putText(twelve_cards_image, "Card 3, Trial: "+str(trials), cardBoxPositions1[C3], cv2.FONT_HERSHEY_SIMPLEX, 2, 255)
 
 		"""
 		Code to show each individual card from key files
