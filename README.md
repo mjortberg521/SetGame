@@ -1,7 +1,7 @@
 # SetGame
 A Python program to find sets in the card game "Set" based off an image
 
-The result of src2.py when used with gameimg8.jpeg is shown in the image below. This program is used when the cards are spaced out. 
+The result of src2.py when used with gameimg8.jpeg is shown in the image below. This program is used when the cards are spaced out. It detects contours with areas>1000 and edges=4 to recognize cards. 
 
 ![set_game_results](https://user-images.githubusercontent.com/12382926/30002606-180c4afe-9073-11e7-9dda-0b60acbc6c08.jpg)
 
@@ -9,4 +9,6 @@ The result of src.py when used with gameimg1.jpg is shown below. This is used wh
 
 ![set_game_results](https://user-images.githubusercontent.com/12382926/30002644-1a454e5a-9074-11e7-802c-efe6fd99c42e.jpg)
 
-This program relies on image processing techniques such as contour detection, canny edge detection, color masking, and OpenCV's built in matchTemplate function. As a result, performance may degrade in varying lighting conditions. A machine learning solution using Haar Cascades is currently being built. 
+This program relies on image processing techniques such as contour detection, canny edge detection, color masking, and OpenCV's built in matchTemplate function. The OpenCV matchTemplate function does not perform well when images have sizes, orientations, and color different from the template images. As a result, performance degrades highly when images in different lighting scenarios or taken from differnt cameras are presented to the template matcher. 
+
+A machine learning solution using Haar Cascades is currently being built. This Haar Cascade program will feature a model to differentiate between cards based on the number, shade, and shape of the cards. The color attribute will be determined using the current color mask technique. 
